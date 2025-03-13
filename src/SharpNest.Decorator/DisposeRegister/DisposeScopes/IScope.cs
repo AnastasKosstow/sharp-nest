@@ -1,4 +1,4 @@
-﻿namespace SharpTools.Decorator.DisposeRegister.DisposeScopes;
+﻿namespace SharpNest.Decorator.DisposeRegister.DisposeScopes;
 
 public interface IScope
 {

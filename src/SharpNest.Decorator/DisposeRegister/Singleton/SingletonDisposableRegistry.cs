@@ -1,4 +1,4 @@
-﻿namespace SharpTools.Decorator.DisposeRegister.Singleton;
+﻿namespace SharpNest.Decorator.DisposeRegister.Singleton;
 
 internal class SingletonDisposableRegistry : DisposableRegistry, ISingletonDisposableRegistry
 {

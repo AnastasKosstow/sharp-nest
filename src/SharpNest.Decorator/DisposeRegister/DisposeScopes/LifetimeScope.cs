@@ -1,7 +1,7 @@
-﻿using SharpTools.Decorator.DisposeRegister.Scoped;
+﻿using SharpNest.Decorator.DisposeRegister.Scoped;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace SharpTools.Decorator.DisposeRegister.DisposeScopes;
+namespace SharpNest.Decorator.DisposeRegister.DisposeScopes;
 
 public class LifetimeScope : IScope
 {

@@ -1,4 +1,4 @@
-﻿namespace SharpTools.Decorator.DisposeRegister.Scoped;
+﻿namespace SharpNest.Decorator.DisposeRegister.Scoped;
 
 public interface IScopedDisposableRegistry : IDisposableRegistry
 {

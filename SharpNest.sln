@@ -7,9 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C7EE83DD-53D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Decorator", "Decorator", "{C5437423-2890-49C8-9239-D3727F25E40E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpTools.Decorator", "src\SharpTools.Decorator\SharpTools.Decorator.csproj", "{83BD5547-C3FB-45E3-9B86-C60DC81BCA2C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kafka", "Kafka", "{A74D3BC6-4883-4B07-BFF7-3F2F5EF0DAAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpNest.Decorator", "src\SharpNest.Decorator\SharpNest.Decorator.csproj", "{D8FD6C84-5AC1-5113-AA56-F60D088A2822}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,17 +19,20 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{83BD5547-C3FB-45E3-9B86-C60DC81BCA2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{83BD5547-C3FB-45E3-9B86-C60DC81BCA2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{83BD5547-C3FB-45E3-9B86-C60DC81BCA2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{83BD5547-C3FB-45E3-9B86-C60DC81BCA2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8FD6C84-5AC1-5113-AA56-F60D088A2822}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8FD6C84-5AC1-5113-AA56-F60D088A2822}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8FD6C84-5AC1-5113-AA56-F60D088A2822}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8FD6C84-5AC1-5113-AA56-F60D088A2822}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C5437423-2890-49C8-9239-D3727F25E40E} = {C7EE83DD-53D4-4B94-9EDA-01AA5B452B6B}
-		{83BD5547-C3FB-45E3-9B86-C60DC81BCA2C} = {C5437423-2890-49C8-9239-D3727F25E40E}
 		{A74D3BC6-4883-4B07-BFF7-3F2F5EF0DAAC} = {C7EE83DD-53D4-4B94-9EDA-01AA5B452B6B}
+		{D8FD6C84-5AC1-5113-AA56-F60D088A2822} = {C5437423-2890-49C8-9239-D3727F25E40E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9F884A9E-9E89-4171-B46B-DDBE2DF6FFAA}
 	EndGlobalSection
 EndGlobal

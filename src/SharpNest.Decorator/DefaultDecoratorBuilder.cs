@@ -1,7 +1,7 @@
-﻿using SharpTools.Decorator.DisposeRegister.DisposeScopes;
+﻿using SharpNest.Decorator.DisposeRegister.DisposeScopes;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace SharpTools.Decorator;
+namespace SharpNest.Decorator;
 
 public class DefaultDecoratorBuilder<TServiceInterface>(IScope scope) : IServiceDecoratorConfigurator<TServiceInterface>, IServiceDecoratorBuilder<TServiceInterface>
 {

@@ -1,4 +1,4 @@
-﻿namespace SharpTools.Decorator;
+﻿namespace SharpNest.Decorator;
 
 public interface IServiceDecoratorConfigurator<in TServiceInterface>
 {

@@ -1,7 +1,7 @@
-﻿using SharpTools.Decorator.DisposeRegister.Singleton;
+﻿using SharpNest.Decorator.DisposeRegister.Singleton;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace SharpTools.Decorator.DisposeRegister.DisposeScopes;
+namespace SharpNest.Decorator.DisposeRegister.DisposeScopes;
 
 public class ShorterLivedScope : IScope
 {

@@ -1,9 +1,9 @@
-﻿using SharpTools.Decorator.DisposeRegister.DisposeScopes;
-using SharpTools.Decorator.DisposeRegister.Scoped;
-using SharpTools.Decorator.DisposeRegister.Singleton;
+﻿using SharpNest.Decorator.DisposeRegister.DisposeScopes;
+using SharpNest.Decorator.DisposeRegister.Scoped;
+using SharpNest.Decorator.DisposeRegister.Singleton;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace SharpTools.Decorator;
+namespace SharpNest.Decorator;
 
 public static class ServiceCollectionExtensions
 {
