@@ -33,7 +33,7 @@ services.AddSingletonService<IWeatherService>(
     });
 ```
 > [!IMPORTANT]
-> Documentation: [here](https://github.com/AnastasKosstow/sharp-nest/docs/fluent-decorator.md)
+> Documentation: [here](https://github.com/AnastasKosstow/sharp-nest/blob/main/docs/fluent-decorator.md)
 >
 
 
