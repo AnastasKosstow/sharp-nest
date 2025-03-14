@@ -1,3 +1,5 @@
+![NuGet Version](https://img.shields.io/nuget/v/SharpNest)
+
 # Intro
 This repository contains implementations of various tools or design patterns that simplify integration of .net projects with these technologies.
 
@@ -12,13 +14,7 @@ dotnet add package SharpNest
 ## Fluent Decorator
 
 Lightweight and extensible tool that simplifies the implementation of the Decorator Pattern in .NET applications.
-<br> 
-
-### Namespace
-
-```bash
-using SharpNest.Decorator;
-```
+<br>
 
 ### Basic usage
 
