@@ -3,21 +3,31 @@ This repository contains implementations of various tools or design patterns tha
 
 * [Fluent Decorator](#fluent-decorator)
 
+### Installation
+
+```bash
+dotnet add package SharpNest
+```
+
 ## Fluent Decorator
 
 Lightweight and extensible tool that simplifies the implementation of the Decorator Pattern in .NET applications.
 <br> 
 
-### Installation
+### Namespace
 
 ```bash
-dotnet add package SharpNest.Decorator
+using SharpNest.Decorator;
 ```
 
 ### Basic usage
 
 ```cs
-using FluentDecorator;
+services.AddDecorator();
+```
+
+```cs
+using SharpNest.Decorator;
 
 ...
 services.AddDecorator();
@@ -36,5 +46,5 @@ services.AddSingletonService<IWeatherService>(
 > Documentation: [here](https://github.com/AnastasKosstow/sharp-nest/blob/main/docs/fluent-decorator.md)
 >
 
-
 <br/>
+
