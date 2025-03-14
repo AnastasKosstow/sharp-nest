@@ -28,10 +28,6 @@ Lightweight and extensible tool that simplifies the implementation of the Decora
 ### Basic usage
 
 ```cs
-services.AddDecorator();
-```
-
-```cs
 using SharpNest.Decorator;
 
 ...
