@@ -47,9 +47,10 @@ services.AddSingletonService<IWeatherService>(
             .AddService<WeatherService>();
     });
 ```
-> [!IMPORTANT]
-> Documentation: [here](https://github.com/AnastasKosstow/sharp-nest/blob/main/docs/fluent-decorator.md)
->
+
+> [!TIP]
+> #### Documentation: [here](https://github.com/AnastasKosstow/sharp-nest/blob/main/docs/fluent-decorator.md) <br>
+> #### Sample app: [here](https://github.com/AnastasKosstow/sharp-nest/tree/main/samples/decorator/src/SharpNest.Samples.Decorator)
 
 <br/>
 
