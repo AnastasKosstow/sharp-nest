@@ -2,31 +2,27 @@ using StackExchange.Redis;
 
 namespace SharpNest.Redis.Stream;
 
-/// <summary>
-/// Redis stream subscriber for subscribing to messages on a specified channel.
-/// </summary>
-public interface IRedisStreamSubscriber
+public interface IRedisStreamSubscriber : IAsyncDisposable, IDisposable
 {
     /// <summary>
-    /// Asynchronously subscribes to the specified channel in the Redis stream and specifies a handler to process received messages.
-    /// <code>
-    /// await streamSubscriber.SubscribeAsync("channel", message => ProcessMessage(message));
-    /// </code>
+    /// Subscribes to a Redis channel and processes messages using the specified handler.
     /// </summary>
-    /// <typeparam name="T">The type of data expected in the messages.</typeparam>
-    /// <param name="channel">The name of the channel to subscribe to.</param>
-    /// <param name="handler">The handler to process received messages.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task SubscribeAsync<T>(string channel, Action<T> handler, RedisChannel.PatternMode patternMode = RedisChannel.PatternMode.Auto) where T : class;
+    /// <typeparam name="T">The type of messages expected from the channel.</typeparam>
+    /// <param name="channel">The channel name to subscribe to.</param>
+    /// <param name="handler">The delegate that handles received messages.</param>
+    /// <param name="patternMode">The pattern matching mode for the channel name.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous subscribe operation. The task result contains a <see cref="ChannelSubscription"/> that can be used to unsubscribe.</returns>
+    Task<ChannelSubscription> SubscribeAsync<T>(string channel,
+        Action<T> handler,
+        RedisChannel.PatternMode patternMode = RedisChannel.PatternMode.Auto,
+        CancellationToken cancellationToken = default) where T : class;
 
     /// <summary>
-    /// Subscribes to the specified channel in the Redis stream and specifies a handler to process received messages.
-    /// <code>
-    /// streamSubscriber.Subscribe("channel", message => ProcessMessage(message));
-    /// </code>
+    /// Unsubscribes from a Redis channel.
     /// </summary>
-    /// <typeparam name="T">The type of data expected in the messages.</typeparam>
-    /// <param name="channel">The name of the channel to subscribe to.</param>
-    /// <param name="handler">The handler to process received messages.</param>
-    void Subscribe<T>(string channel, Action<T> handler, RedisChannel.PatternMode patternMode = RedisChannel.PatternMode.Auto) where T : class;
+    /// <param name="subscription">The subscription to cancel.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous unsubscribe operation.</returns>
+    Task UnsubscribeAsync(ChannelSubscription subscription, CancellationToken cancellationToken = default);
 }

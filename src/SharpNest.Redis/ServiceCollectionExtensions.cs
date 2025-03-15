@@ -9,7 +9,7 @@ public static class ServiceCollectionExtensions
 {
     private static readonly string sectionName = "redis";
 
-    public static IServiceCollection AddRedLens(this IServiceCollection services, IConfiguration configuration, Action<IRedisConfiguration> configAction)
+    public static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration, Action<IRedisConfiguration> configAction)
     {
         var section = configuration.GetSection(sectionName);
         var options = new RedisOptions();
@@ -19,7 +19,7 @@ public static class ServiceCollectionExtensions
         {
             throw new RedisConfigurationOptionsException(
                 $"Cannot get RedisOptions section from {nameof(IConfiguration)}. " +
-                $"\"RedLens\" section must be provided with property \"ConnectionString\" with a valid redis database connection string.");
+                $"\"Redis\" section must be provided with property \"ConnectionString\" with a valid redis database connection string.");
         }
 
         services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(options.ConnectionString));

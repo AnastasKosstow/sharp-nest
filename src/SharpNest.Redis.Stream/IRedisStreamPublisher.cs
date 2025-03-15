@@ -2,20 +2,18 @@ using StackExchange.Redis;
 
 namespace SharpNest.Redis.Stream;
 
-/// <summary>
-/// Redis stream publisher for publishing data to a specified queue.
-/// </summary>
-public interface IRedisStreamPublisher
+public interface IRedisStreamPublisher : IAsyncDisposable, IDisposable
 {
     /// <summary>
-    /// Publishes data of type T to the specified queue in the Redis stream.
-    /// <code>
-    /// await streamPublisher.PublishAsync("queue", data);
-    /// </code>
+    /// Publishes a message to the specified Redis channel.
     /// </summary>
-    /// <typeparam name="T">The type of data to publish.</typeparam>
-    /// <param name="queue">The name of the queue to publish the data to.</param>
-    /// <param name="data">The data to publish.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task PublishAsync<T>(string queue, T data, RedisChannel.PatternMode patternMode = RedisChannel.PatternMode.Auto) where T : class;
+    /// <typeparam name="T">The type of the message to publish.</typeparam>
+    /// <param name="channel">The channel name to publish to.</param>
+    /// <param name="message">The message to publish.</param>
+    /// <param name="patternMode">The pattern matching mode for the channel name.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    Task<long> PublishAsync<T>(string channel, 
+        T message, 
+        RedisChannel.PatternMode patternMode = RedisChannel.PatternMode.Auto,
+        CancellationToken cancellationToken = default) where T : class;
 }
