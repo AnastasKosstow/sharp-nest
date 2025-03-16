@@ -7,8 +7,6 @@
 ![Tests](https://github.com/AnastasKosstow/sharp-nest/actions/workflows/tests.yml/badge.svg)
 
 
-
-
 # Intro
 This repository contains implementations of various tools or design patterns that simplify integration of .net projects with these technologies.
 
@@ -50,3 +48,41 @@ services.AddSingletonService<IWeatherService>(
 
 <br/>
 
+## Redis
+
+.................
+<br>
+
+### Basic usage
+
+ ```cs
+ services
+    .AddRedLens(config =>
+    {
+        config
+            .AddRedisCache() // Add redis cache
+            .AddRedisStreaming(); // Add redis Pub/Sub
+    });
+ ```
+
+
+```cs
+string key = "redis:key";
+
+await cache.SetAsync(key, value, cacheEntryOptions =>
+{
+    cacheEntryOptions.Expiration = new TimeSpan(1, 0, 0);
+});
+
+var result = await cache.𝚃𝚛𝚢𝙶𝚎𝚝𝙰𝚜𝚢𝚗𝚌(key);
+if (result.Success)
+{
+    var value = result.Result;
+}
+```
+
+> [!TIP]
+> #### Documentation: [here]() <br>
+> #### Sample app: [here]()
+
+<br/>
