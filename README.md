@@ -67,17 +67,20 @@ services.AddSingletonService<IWeatherService>(
 
 
 ```cs
+private readonly IRedisCache _cache;
+...
+
 string key = "redis:key";
 
-await cache.SetAsync(key, value, cacheEntryOptions =>
+await _cache.SetAsync(key, value, cacheEntryOptions =>
 {
     cacheEntryOptions.Expiration = new TimeSpan(1, 0, 0);
 });
 
-var result = await cache.𝚃𝚛𝚢𝙶𝚎𝚝𝙰𝚜𝚢𝚗𝚌(key);
-if (result.Success)
+var (Success, Result) = await _cache.TryGetAsync(key, cancellationToken);
+if (!Success)
 {
-    var value = result.Result;
+    // handle null result
 }
 ```
 
