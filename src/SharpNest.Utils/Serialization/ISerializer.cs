@@ -1,4 +1,4 @@
-﻿namespace SharpNest.Shared.Serialization;
+﻿namespace SharpNest.Utils.Serialization;
 
 public interface ISerializer
 {

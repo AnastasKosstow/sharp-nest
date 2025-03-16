@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Title>SharpNest.Redis.Stream</Title>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SharpNest.Shared\SharpNest.Shared.csproj" />
+    <ProjectReference Include="..\SharpNest.Utils\SharpNest.Utils.csproj" />
   </ItemGroup>
 	
 </Project>

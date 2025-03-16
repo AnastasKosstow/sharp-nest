@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace SharpNest.Shared.Serialization;
+namespace SharpNest.Utils.Serialization;
 
 public sealed class SystemTextJsonSerializer : ISerializer
 {

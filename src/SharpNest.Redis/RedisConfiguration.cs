@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SharpNest.Redis.Cache;
 using SharpNest.Redis.Stream;
-using SharpNest.Shared.Serialization;
+using SharpNest.Utils.Serialization;
 
 namespace SharpNest.Redis;
 

@@ -1,4 +1,4 @@
-﻿using SharpNest.Shared.Serialization;
+﻿using SharpNest.Utils.Serialization;
 using System.Runtime.Serialization;
 using StackExchange.Redis;
 using Microsoft.Extensions.Logging;

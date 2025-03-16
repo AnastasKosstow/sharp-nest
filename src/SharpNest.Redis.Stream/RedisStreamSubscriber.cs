@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using Microsoft.Extensions.Logging;
-using SharpNest.Shared.Serialization;
+using SharpNest.Utils.Serialization;
 using StackExchange.Redis;
 
 namespace SharpNest.Redis.Stream;
