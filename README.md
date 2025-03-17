@@ -22,6 +22,8 @@ dotnet add package SharpNest
 
 Lightweight and extensible tool that simplifies the implementation of the Decorator Pattern in .NET applications.
 <br>
+It provides a fluent API for registering services with multiple decorators in Dependency Injection (DI) container while ensuring proper lifetime management and correct disposal of decorated services.
+<br>
 
 ### Basic usage
 
@@ -50,7 +52,9 @@ services.AddSingletonService<IWeatherService>(
 
 ## Redis
 
-.................
+Powerful Redis client for .NET applications that provides a clean, strongly-typed API for Redis operations.
+<br>
+It offers seamless integration with dependency injection and supports both caching and pub/sub messaging patterns with minimal configuration.
 <br>
 
 ### Basic usage
@@ -85,7 +89,7 @@ if (!Success)
 ```
 
 > [!TIP]
-> #### Documentation: [here]() <br>
-> #### Sample app: [here]()
+> #### Documentation: [here](https://github.com/AnastasKosstow/sharp-nest/blob/main/docs/redis.md) <br>
+> #### Sample app: [here](https://github.com/AnastasKosstow/sharp-nest/tree/main/samples/decorator/src/SharpNest.Samples.Redis.Api)
 
 <br/>
