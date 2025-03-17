@@ -91,6 +91,6 @@ if (!Success)
 
 > [!TIP]
 > #### Documentation: [here](https://github.com/AnastasKosstow/sharp-nest/blob/main/docs/redis.md) <br>
-> #### Sample app: [here](https://github.com/AnastasKosstow/sharp-nest/tree/main/samples/decorator/src/SharpNest.Samples.Redis.Api)
+> #### Sample app: [here](https://github.com/AnastasKosstow/sharp-nest/tree/main/samples/redis/src/SharpNest.Samples.Redis.Api)
 
 <br/>
