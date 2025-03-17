@@ -6,7 +6,6 @@
 ![Build](https://github.com/AnastasKosstow/sharp-nest/actions/workflows/build.yml/badge.svg)
 ![Tests](https://github.com/AnastasKosstow/sharp-nest/actions/workflows/tests.yml/badge.svg)
 
-
 # Intro
 This repository contains implementations of various tools or design patterns that simplify integration of .net projects with these technologies.
 
@@ -18,6 +17,8 @@ This repository contains implementations of various tools or design patterns tha
 ```bash
 dotnet add package SharpNest
 ```
+
+---
 
 ## Fluent Decorator
 
@@ -49,7 +50,7 @@ services.AddSingletonService<IWeatherService>(
 > #### Documentation: [here](https://github.com/AnastasKosstow/sharp-nest/blob/main/docs/fluent-decorator.md) <br>
 > #### Sample app: [here](https://github.com/AnastasKosstow/sharp-nest/tree/main/samples/decorator/src/SharpNest.Samples.Decorator)
 
-<br/>
+---
 
 ## Redis
 
@@ -93,4 +94,5 @@ if (!Success)
 > #### Documentation: [here](https://github.com/AnastasKosstow/sharp-nest/blob/main/docs/redis.md) <br>
 > #### Sample app: [here](https://github.com/AnastasKosstow/sharp-nest/tree/main/samples/redis/src/SharpNest.Samples.Redis.Api)
 
-<br/>
+---
+
