@@ -11,6 +11,7 @@
 This repository contains implementations of various tools or design patterns that simplify integration of .net projects with these technologies.
 
 * [Fluent Decorator](#fluent-decorator)
+* [Redis](#redis)
 
 ### Installation
 
