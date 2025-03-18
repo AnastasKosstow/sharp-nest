@@ -63,7 +63,7 @@ It offers seamless integration with dependency injection and supports both cachi
 
  ```cs
  services
-    .AddRedLens(config =>
+    .AddRedis(config =>
     {
         config
             .AddRedisCache() // Add redis cache
