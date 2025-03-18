@@ -2,7 +2,7 @@
      alt="NET badge" 
      width="170">
 
-![NuGet Version](https://img.shields.io/nuget/v/SharpNest)
+![NuGet Version](https://img.shields.io/nuget/v/SharpNest.Decorator)
 ![Build](https://github.com/AnastasKosstow/sharp-nest/actions/workflows/build.yml/badge.svg)
 ![Tests](https://github.com/AnastasKosstow/sharp-nest/actions/workflows/tests.yml/badge.svg)
 
