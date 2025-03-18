@@ -6,6 +6,8 @@
     <Title>SharpNest.Redis.Cache</Title>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<Version>1.0.0</Version>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 	
   <ItemGroup>
