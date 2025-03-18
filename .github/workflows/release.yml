@@ -20,13 +20,15 @@ jobs:
       - name: Restore
         run: dotnet restore
 
+      - name: Clean up old packages
+        run: rm -f **/bin/Release/*.nupkg
+
       - name: Build
         run: dotnet build --configuration Release
 
       - name: Pack
-        run:
+        run: |
           VERSION=${GITHUB_REF_NAME#v}
-          echo "Building NuGet package version '$VERSION'..."
           dotnet pack --configuration Release /p:PackageVersion=$VERSION
 
       - name: Push to NuGet
