@@ -11,6 +11,13 @@
 	<PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 	
+  <ItemGroup>
+    <EmbeddedResource Include="README.md">
+      <Pack>true</Pack>
+      <PackagePath></PackagePath>
+    </EmbeddedResource>
+  </ItemGroup>
+	
   <PropertyGroup>
 	<NoWarn>$(NoWarn);1591</NoWarn>
     <NoWarn>$(NoWarn);8632</NoWarn>
