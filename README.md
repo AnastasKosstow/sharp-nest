@@ -15,7 +15,8 @@ This repository contains implementations of various tools or design patterns tha
 ### Installation
 
 ```bash
-dotnet add package SharpNest
+dotnet add package SharpNest.Decorator
+dotnet add package SharpNest.Redis
 ```
 
 ---
