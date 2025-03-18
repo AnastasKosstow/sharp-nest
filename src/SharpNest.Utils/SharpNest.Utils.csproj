@@ -8,5 +8,10 @@
 	<Version>1.0.0</Version>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
+	
+  <PropertyGroup>
+	<NoWarn>$(NoWarn);1591</NoWarn>
+	<NoWarn>$(NoWarn);8632</NoWarn>
+  </PropertyGroup>
 
 </Project>

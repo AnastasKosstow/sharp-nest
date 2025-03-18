@@ -10,6 +10,11 @@
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 	
+  <PropertyGroup>
+	<NoWarn>$(NoWarn);1591</NoWarn>
+    <NoWarn>$(NoWarn);8632</NoWarn>
+  </PropertyGroup>
+	
   <ItemGroup>
     <PackageReference Include="StackExchange.Redis" Version="2.8.31" />
   </ItemGroup>
