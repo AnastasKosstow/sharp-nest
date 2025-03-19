@@ -11,6 +11,7 @@ This repository contains implementations of various tools or design patterns tha
 
 * [Fluent Decorator](#fluent-decorator)
 * [Redis](#redis)
+* [Kafka](#kafka)
 
 ### Installation
 
@@ -96,4 +97,8 @@ if (!Success)
 > #### Sample app: [here](https://github.com/AnastasKosstow/sharp-nest/tree/main/samples/redis/src/SharpNest.Samples.Redis.Api)
 
 ---
+
+## Kafka
+
+........................
 
