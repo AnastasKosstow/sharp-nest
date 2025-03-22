@@ -1,12 +1,16 @@
-﻿# SharpNest.Kafka
+# SharpNest.Kafka
 
 SharpNest.Kafka is a robust and flexible .NET library that simplifies Apache Kafka integration for your .NET applications.
+<br>
 It provides a clean abstraction over the Confluent.Kafka client with an intuitive API for publishing messages and consuming from topics.
-
+<br>
 With SharpNest.Kafka, you can easily implement resilient message handling with built-in retry strategies, automatic topic creation, and proper resource management.
+<br>
+
+I𝚝 𝚜𝚞𝚙𝚙𝚘𝚛𝚝𝚜 𝚜𝚒𝚗𝚐𝚕𝚎𝚝𝚘𝚗, 𝚜𝚌𝚘𝚙𝚎𝚍, 𝚊𝚗𝚍 𝚝𝚛𝚊𝚗𝚜𝚒𝚎𝚗𝚝 𝚕𝚒𝚏𝚎𝚝𝚒𝚖𝚎𝚜, 𝚎𝚗𝚜𝚞𝚛𝚒𝚗𝚐 𝚙𝚛𝚘𝚙𝚎𝚛 𝚍𝚒𝚜𝚙𝚘𝚜𝚊𝚕 𝚘𝚏 𝚔𝚊𝚏𝚔𝚊 𝚌𝚘𝚗𝚗𝚎𝚌𝚝𝚒𝚘𝚗𝚜.
 
 > [!IMPORTANT]
-> Key Features:
+> Key Features:<br>
 > &nbsp;&nbsp;&nbsp;✅ Fluent Configuration API – Configure Kafka settings in a readable, expressive manner.<br>
 > &nbsp;&nbsp;&nbsp;✅ Resilient Messaging – Built-in retry strategies for handling transient failures.<br>
 > &nbsp;&nbsp;&nbsp;✅ Auto Topic Creation – Topics are created automatically if they don't exist.<br>

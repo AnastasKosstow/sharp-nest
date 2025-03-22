@@ -18,6 +18,7 @@ This repository contains implementations of various tools or design patterns tha
 ```bash
 dotnet add package SharpNest.Decorator
 dotnet add package SharpNest.Redis
+dotnet add package SharpNest.Kafka
 ```
 
 ---
@@ -100,5 +101,83 @@ if (!Success)
 
 ## Kafka
 
-........................
+SharpNest.Kafka is a robust and flexible .NET library that simplifies Apache Kafka integration for your .NET applications.
+<br>
+It provides a clean abstraction over the Confluent.Kafka client with an intuitive API for publishing messages and consuming from topics.
+<br>
+With SharpNest.Kafka, you can easily implement resilient message handling with built-in retry strategies, automatic topic creation, and proper resource management.
+<br>
 
+### Basic usage
+
+```cs
+using SharpNest.Kafka;
+
+...
+builder.Services
+    .AddKafka(builder.Configuration)
+    .AddPublisher()
+    .AddSingletonSubscriber();
+```
+
+### Publish
+```cs
+public class MessageService(IPublisher publisher)
+{
+    private readonly IPublisher _publisher = publisher;
+
+    ...
+}
+    public async Task SendMessageAsync(string key, string content)
+    {
+        var result = await _publisher.PublishAsync(
+            "my-topic",  // Topic name
+            key,         // Message key
+            content      // Message content
+        );
+
+        ...   
+    }
+```
+
+### Subscribe
+
+```csharp
+public class MessageConsumerService(ISubscriber subscriber, ILogger<MessageConsumerService> logger)
+{
+    private readonly ISubscriber _subscriber = subscriber;
+    private readonly ILogger<MessageConsumerService> _logger = logger;
+    
+    public async Task StartConsumingAsync(CancellationToken cancellationToken)
+    {
+        await _subscriber.SubscribeAsync(
+            "my-topic",
+            async message => 
+            {
+                _logger.LogInformation(
+                    "Received message: Key={Key}, Value={Value}", 
+                    message.Key, 
+                    message.Value
+                );
+                
+                await ProcessMessageAsync(message);
+            },
+            "my-consumer-group",
+            cancellationToken
+        );
+    }
+    
+    private Task ProcessMessageAsync(IMessage message)
+    {
+        // Process message
+
+        return Task.CompletedTask;
+    }
+}
+```
+
+> [!TIP]
+> #### Documentation: [here](https://github.com/AnastasKosstow/sharp-nest/blob/main/docs/kafka.md) <br>
+> #### Sample app: [here](https://github.com/AnastasKosstow/sharp-nest/tree/main/samples/kafka/src/SharpNest.Samples.Kafka)
+
+---
