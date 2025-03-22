@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35818.85
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpNest.Samples.Kafka", "src\SharpNest.Samples.Kafka\SharpNest.Samples.Kafka.csproj", "{E8B0DA10-0F10-6ABB-0D19-139DEBA613B3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E8B0DA10-0F10-6ABB-0D19-139DEBA613B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8B0DA10-0F10-6ABB-0D19-139DEBA613B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8B0DA10-0F10-6ABB-0D19-139DEBA613B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8B0DA10-0F10-6ABB-0D19-139DEBA613B3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E8B0DA10-0F10-6ABB-0D19-139DEBA613B3} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1ACE4EF5-7235-4FA8-8118-46346673BD1F}
+	EndGlobalSection
+EndGlobal
