@@ -1,3 +1,4 @@
+using KafkaWebApiDemo.Services;
 using SharpNest.Kafka;
 using SharpNest.Kafka.Core.Abstractions;
 
@@ -14,7 +15,7 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-app.MapPost("/publish", async (IPublisher publisher) =>
+app.MapPost("/publish", async (Request request, IPublisher publisher) =>
 {
     var result = await publisher.PublishAsync(
         "messages-topic",
@@ -29,8 +30,16 @@ app.MapPost("/publish", async (IPublisher publisher) =>
             Topic = result.Topic,
             Partition = result.Partition,
             Timestamp = result.Timestamp,
-            Success = result.Success
+            Success = result.IsPersisted
         });
 });
 
 app.Run();
+
+
+
+public class Request
+{
+    public string Key { get; set; }
+    public string Content { get; set; }
+}
