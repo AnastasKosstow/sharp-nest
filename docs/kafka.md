@@ -257,10 +257,6 @@ services.AddKafka(Configuration.GetSection("Kafka"))
     .AddSingletonSubscriber();
 ```
 
-## 🚀 Complete Example: ASP.NET Core Web API with Kafka Integration: [here](https://github.com/AnastasKosstow/sharp-nest/tree/main/samples/kafka/src/SharpNest.Samples.Kafka)
-
-# SharpNest.Kafka Documentation
-
 ## 📋 Available Options
 
 ### KafkaSettings
