@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using SharpNest.Kafka.Core.Abstractions;
+﻿using SharpNest.Kafka.Core.Abstractions;
 
 namespace KafkaWebApiDemo.Services;
 

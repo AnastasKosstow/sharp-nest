@@ -11,12 +11,12 @@ internal class KafkaConfiguration(IServiceCollection services) : IKafkaConfigura
     private readonly IServiceCollection _services = services;
 
     /// <inheritdoc/>
-    public IServiceCollection AddPublisher()
+    public IKafkaConfiguration AddPublisher()
     {
         var publisherDescriptor = new ServiceDescriptor(typeof(IPublisher), typeof(KafkaPublisher), ServiceLifetime.Singleton);
 
         _services.Add(publisherDescriptor);
-        return _services;
+        return this;
     }
 
     /// <inheritdoc/>
@@ -31,21 +31,24 @@ internal class KafkaConfiguration(IServiceCollection services) : IKafkaConfigura
     }
 
     /// <inheritdoc/>
-    public IServiceCollection AddSingletonSubscriber()
+    public IKafkaConfiguration AddSingletonSubscriber()
     {
-        return AddKafkaSubscriber(_services, ServiceLifetime.Singleton);
+        AddKafkaSubscriber(_services, ServiceLifetime.Singleton);
+        return this;
     }
 
     /// <inheritdoc/>
-    public IServiceCollection AddScopedSubscriber()
+    public IKafkaConfiguration AddScopedSubscriber()
     {
-        return AddKafkaSubscriber(_services, ServiceLifetime.Scoped);
+        AddKafkaSubscriber(_services, ServiceLifetime.Scoped);
+        return this;
     }
 
     /// <inheritdoc/>
-    public IServiceCollection AddTransientSubscriber()
+    public IKafkaConfiguration AddTransientSubscriber()
     {
-        return AddKafkaSubscriber(_services, ServiceLifetime.Transient);
+        AddKafkaSubscriber(_services, ServiceLifetime.Transient);
+        return this;
     }
 
     /// <inheritdoc/>
@@ -73,7 +76,7 @@ internal class KafkaConfiguration(IServiceCollection services) : IKafkaConfigura
         return this;
     }
 
-    private static IServiceCollection AddKafkaSubscriber(IServiceCollection services, ServiceLifetime lifetime)
+    private static void AddKafkaSubscriber(IServiceCollection services, ServiceLifetime lifetime)
     {
         var subscriberDescriptor = new ServiceDescriptor(
             serviceType: typeof(ISubscriber),
@@ -81,6 +84,5 @@ internal class KafkaConfiguration(IServiceCollection services) : IKafkaConfigura
             lifetime);
 
         services.Add(subscriberDescriptor);
-        return services;
     }
 }

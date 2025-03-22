@@ -8,7 +8,7 @@ public interface IKafkaConfiguration
     /// <summary>
     /// Adds a Kafka producer to the service collection.
     /// </summary>
-    IServiceCollection AddPublisher();
+    IKafkaConfiguration AddPublisher();
 
     /// <summary>
     /// Configures the Kafka publisher settings programmatically.
@@ -19,17 +19,17 @@ public interface IKafkaConfiguration
     /// <summary>
     /// Adds a singleton Kafka consumer to the service collection.
     /// </summary>
-    IServiceCollection AddSingletonSubscriber();
+    IKafkaConfiguration AddSingletonSubscriber();
 
     /// <summary>
     /// Adds a scoped Kafka consumer to the service collection.
     /// </summary>
-    IServiceCollection AddScopedSubscriber();
+    IKafkaConfiguration AddScopedSubscriber();
 
     /// <summary>
     /// Adds a transient Kafka consumer to the service collection.
     /// </summary>
-    IServiceCollection AddTransientSubscriber();
+    IKafkaConfiguration AddTransientSubscriber();
 
     /// <summary>
     /// Configures the Kafka subscriber settings programmatically.
