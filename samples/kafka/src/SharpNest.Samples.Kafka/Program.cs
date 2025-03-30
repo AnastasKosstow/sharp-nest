@@ -1,4 +1,4 @@
-using KafkaWebApiDemo.Services;
+using SharpNest.Samples.Kafka;
 using SharpNest.Kafka;
 using SharpNest.Kafka.Core.Abstractions;
 

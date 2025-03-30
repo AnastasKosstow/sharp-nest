@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharpNest.Kafka.Core;
-using SharpNest.Kafka.Core.Abstractions;
 using SharpNest.Kafka.Core.Settings;
 using SharpNest.Utils.Serialization;
 
@@ -20,7 +19,7 @@ public static class ServiceCollectionExtensions
         services.Configure<KafkaSettings>(configuration.GetSection("Kafka"));
 
         services.AddSingleton<KafkaConnection>();
-        services.AddSingleton<IPublisher, KafkaPublisher>();
+        services.AddSingleton<KafkaConfigBuilder>();
         RegisterSerializer(services);
 
         return new KafkaConfiguration(services);

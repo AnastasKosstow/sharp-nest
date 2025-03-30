@@ -1,6 +1,6 @@
 ﻿using SharpNest.Kafka.Core.Abstractions;
 
-namespace KafkaWebApiDemo.Services;
+namespace SharpNest.Samples.Kafka;
 
 public class KafkaConsumerService(ISubscriber subscriber, ILogger<KafkaConsumerService> logger) : BackgroundService
 {
