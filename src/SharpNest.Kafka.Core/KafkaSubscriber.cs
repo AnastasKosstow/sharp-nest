@@ -33,6 +33,7 @@ internal class KafkaSubscriber : ISubscriber, IDisposable
                 {
                     _logger.LogError(args.Outcome.Exception, "Error consuming message after {Timeout}s ({ExceptionMessage})", $"{args.RetryDelay.TotalSeconds:n1}", args.Outcome.Exception?.Message);
                 })
+            .AddCircuitBreakerStrategy(_logger, predicate => (PredicateBuilder)predicate.Handle<ConsumeException>())
             .Build();
     }
 
@@ -99,6 +100,7 @@ internal class KafkaSubscriber : ISubscriber, IDisposable
                     try
                     {
                         await messageHandler(message);
+                        _kafkaConsumer.Commit(result);
                     }
                     catch (Exception ex)
                     {

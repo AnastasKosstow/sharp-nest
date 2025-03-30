@@ -27,11 +27,12 @@ internal class KafkaPublisher : IPublisher, IDisposable
 
         _pipeline = new ResiliencePipelineBuilder()
             .AddRetryStrategy(predicate =>
-                (PredicateBuilder)predicate.Handle<ConsumeException>(),
+                (PredicateBuilder)predicate.Handle<ProduceException<string, string>>(),
                 args =>
                 {
                     _logger.LogError(args.Outcome.Exception, "Could not publish event after {Timeout}s ({ExceptionMessage})", $"{args.RetryDelay.TotalSeconds:n1}", args.Outcome.Exception.Message);
                 })
+            .AddCircuitBreakerStrategy(_logger, predicate => (PredicateBuilder)predicate.Handle<ProduceException<string, string>>())
             .Build();
     }
 
@@ -80,11 +81,13 @@ internal class KafkaPublisher : IPublisher, IDisposable
 
                 await ExecuteWithRetryAsync(async () =>
                 {
-                    var tasks = kafkaMessages.Select(message => producer.ProduceAsync(topic, message, cancellationToken));
+                    var tasks = kafkaMessages
+                        .Select(message => producer.ProduceAsync(topic, message, cancellationToken))
+                        .ToList();
 
-                    await Task.WhenAll(tasks);
+                    var deliveryReports = await Task.WhenAll(tasks);
 
-                    deliveryResults.AddRange(tasks.Select(task => task.Result));
+                    deliveryResults.AddRange(deliveryReports);
                 }, topic);
 
                 kafkaDeliveryResults.AddRange(deliveryResults.Select(r => new KafkaDeliveryResult(
