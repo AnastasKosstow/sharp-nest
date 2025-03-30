@@ -2,12 +2,39 @@
 
 namespace SharpNest.Samples.Kafka;
 
-public class KafkaConsumerService(ISubscriber subscriber, ILogger<KafkaConsumerService> logger) : BackgroundService
+public class KafkaConsumerService(ISubscriber subscriber, ILogger<KafkaConsumerService> logger) : IHostedService
 {
     private readonly ISubscriber _subscriber = subscriber;
     private readonly ILogger<KafkaConsumerService> _logger = logger;
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    private Task _executingTask;
+    private CancellationTokenSource _cancellationTokenSource;
+
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        _executingTask = Task.Run(() => ExecuteAsync(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
+        return Task.CompletedTask;
+    }
+
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        if (_executingTask == null)
+        {
+            return;
+        }
+
+        try
+        {
+            _cancellationTokenSource?.Cancel();
+        }
+        finally
+        {
+            await Task.WhenAny(_executingTask, Task.Delay(TimeSpan.FromSeconds(5), cancellationToken));
+        }
+    }
+
+    private async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         try
         {
@@ -24,7 +51,7 @@ public class KafkaConsumerService(ISubscriber subscriber, ILogger<KafkaConsumerS
                     await Task.CompletedTask;
                 },
                 "consumer-group-1",
-                stoppingToken);
+                cancellationToken);
         }
         catch (Exception ex)
         {
