@@ -35,6 +35,73 @@ internal class KafkaPublisher : IPublisher, IDisposable
             .Build();
     }
 
+    public async Task<IReadOnlyList<KafkaDeliveryResult>> PublishBatchAsync(string topic, IEnumerable<KeyValuePair<string, string>> keyValuePairs, CancellationToken cancellationToken = default, params KeyValuePair<string, byte[]>[] headers)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(topic, nameof(topic));
+        ArgumentNullException.ThrowIfNull(keyValuePairs, nameof(keyValuePairs));
+        ThrowIfDisposed();
+
+        var messages = keyValuePairs.Select(kv => new KafkaMessage
+        {
+            Topic = topic,
+            Key = kv.Key,
+            Value = kv.Value,
+            Headers = headers?.ToDictionary(h => h.Key, h => h.Value)
+        });
+
+        return await PublishBatchAsync(messages, cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<KafkaDeliveryResult>> PublishBatchAsync(IEnumerable<KafkaMessage> messages, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(messages);
+        ThrowIfDisposed();
+
+        var messagesList = messages.ToList();
+        if (messagesList.Count == 0)
+        {
+            return [];
+        }
+
+        var kafkaDeliveryResults = new List<KafkaDeliveryResult>(messagesList.Count);
+        var batchesByTopic = messagesList.GroupBy(kafkaMessage => kafkaMessage.Topic);
+
+        foreach (var batch in batchesByTopic)
+        {
+            var topic = batch.Key;
+            ArgumentException.ThrowIfNullOrEmpty(topic, nameof(topic));
+
+            var producer = _connection.GetProducer<string, string>();
+            var kafkaMessages = PrepareKafkaMessages(batch);
+
+            try
+            {
+                var deliveryResults = new List<DeliveryResult<string, string>>();
+
+                await ExecuteWithRetryAsync(async () =>
+                {
+                    var tasks = kafkaMessages.Select(message => producer.ProduceAsync(topic, message, cancellationToken));
+
+                    await Task.WhenAll(tasks);
+
+                    deliveryResults.AddRange(tasks.Select(task => task.Result));
+                }, topic);
+
+                kafkaDeliveryResults.AddRange(deliveryResults.Select(r => new KafkaDeliveryResult(
+                    r.Topic,
+                    r.Partition.Value,
+                    r.Timestamp.UtcDateTime,
+                    r.Status == PersistenceStatus.Persisted)));
+            }
+            catch (Exception ex)
+            {
+                throw new KafkaPublisherException($"Failed to publish batch of {kafkaMessages.Count} messages to topic {topic}", ex);
+            }
+        }
+
+        return kafkaDeliveryResults;
+    }
+
     public async Task<KafkaDeliveryResult> PublishAsync(string topic, string key, string value, CancellationToken cancellationToken = default, params KeyValuePair<string, byte[]>[] headers)
     {
         ArgumentException.ThrowIfNullOrEmpty(topic, nameof(topic));
@@ -59,15 +126,11 @@ internal class KafkaPublisher : IPublisher, IDisposable
         ArgumentNullException.ThrowIfNull(message.Topic);
         ThrowIfDisposed();
 
-        var serializedValue = string.Empty;
-        if (message.Value != null)
+        if (message.Value == null)
         {
-            serializedValue = SerializePayloadAsync(message.Value);
+            throw new ArgumentNullException(nameof(message.Value), "Message value cannot be null");
         }
-        else
-        {
-            return null;
-        }
+        var serializedValue = SerializePayload(message.Value);
 
         var headers = new Headers();
         foreach (var header in message.Headers ?? new Dictionary<string, byte[]>())
@@ -93,12 +156,40 @@ internal class KafkaPublisher : IPublisher, IDisposable
             },
             message.Topic);
 
-            return new KafkaDeliveryResult(result.Topic, result.Partition.Value, result.Timestamp.UtcDateTime, result.Status == PersistenceStatus.Persisted);
+            var kafkaDeliveryResult = new KafkaDeliveryResult(result.Topic, result.Partition.Value, result.Timestamp.UtcDateTime, result.Status == PersistenceStatus.Persisted);
+            return kafkaDeliveryResult;
         }
         catch (Exception ex)
         {
             throw new KafkaPublisherException($"Failed to publish message to topic {message.Topic}", ex);
         }
+    }
+
+    private List<Message<string, string>> PrepareKafkaMessages(IEnumerable<KafkaMessage> messages)
+    {
+        return [.. messages.Select(message =>
+        {
+            if (message.Value == null)
+            {
+                throw new ArgumentNullException(nameof(message.Value), "Message value cannot be null");
+            }
+
+            var headers = new Headers();
+            if (message.Headers?.Count > 0)
+            {
+                foreach (var header in message.Headers)
+                {
+                    headers.Add(header.Key, header.Value);
+                }
+            }
+
+            return new Message<string, string>
+            {
+                Key = message.Key,
+                Value = SerializePayload(message.Value),
+                Headers = headers
+            };
+        })];
     }
 
     private async Task ExecuteWithRetryAsync(Func<Task> action, string topic)
@@ -115,7 +206,7 @@ internal class KafkaPublisher : IPublisher, IDisposable
         }
     }
 
-    private string SerializePayloadAsync(object data)
+    private string SerializePayload(object data)
     {
         try
         {

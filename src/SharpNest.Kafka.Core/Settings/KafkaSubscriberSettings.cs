@@ -39,4 +39,18 @@ public class KafkaSubscriberSettings
     /// Gets or sets the number of messages to request in each fetch.
     /// </summary>
     public int MaxPartitionFetchBytes { get; set; } = 1048576;
+
+    /// <summary>
+    /// Gets or sets the strategy for handling errors that occur during message processing.
+    /// Commit (commit and continue), 
+    /// Retry (don't commit), 
+    /// DeadLetter (send to dead letter topic),
+    /// Throw (propagate exception).
+    /// </summary>
+    public ErrorHandlingStrategy ErrorHandlingStrategy { get; set; } = ErrorHandlingStrategy.Commit;
+
+    /// <summary>
+    /// Gets or sets the topic name for storing messages that failed processing.
+    /// </summary>
+    public string DeadLetterTopic { get; set; } = "dead-letter-queue";
 }

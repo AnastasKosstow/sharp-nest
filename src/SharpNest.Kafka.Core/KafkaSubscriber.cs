@@ -103,6 +103,21 @@ internal class KafkaSubscriber : ISubscriber, IDisposable
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, "Error processing message from topic {Topic}, partition {Partition}: {Error}", result.Topic, result.Partition.Value, ex.Message);
+
+                        switch (_settings.Subscriber.ErrorHandlingStrategy)
+                        {
+                            case ErrorHandlingStrategy.Commit:
+                                _kafkaConsumer.Commit(result);
+                                break;
+                            case ErrorHandlingStrategy.Retry:
+                                break;
+                            case ErrorHandlingStrategy.DeadLetter:
+                                await PublishToDeadLetterQueueAsync(message, ex);
+                                _kafkaConsumer.Commit(result);
+                                break;
+                            case ErrorHandlingStrategy.Throw:
+                                throw;
+                        }
                     }
                 }, cancellationToken);
             }
@@ -147,6 +162,53 @@ internal class KafkaSubscriber : ISubscriber, IDisposable
         }
     }
 
+    private async Task PublishToDeadLetterQueueAsync(KafkaMessage message, Exception exception)
+    {
+        if (string.IsNullOrEmpty(_settings.Subscriber.DeadLetterTopic))
+        {
+            _logger.LogWarning("Dead letter queue strategy selected but no dead letter topic configured");
+            return;
+        }
+
+        try
+        {
+            var headers = new Dictionary<string, byte[]>(message.Headers)
+            {
+                ["X-Error-Type"] = System.Text.Encoding.UTF8.GetBytes(exception.GetType().FullName),
+                ["X-Error-Message"] = System.Text.Encoding.UTF8.GetBytes(exception.Message),
+                ["X-Original-Topic"] = System.Text.Encoding.UTF8.GetBytes(message.Topic),
+                ["X-Failure-Timestamp"] = System.Text.Encoding.UTF8.GetBytes(DateTime.UtcNow.ToString("O"))
+            };
+
+            var deadLetterMessage = new KafkaMessage
+            {
+                Key = message.Key,
+                Value = message.Value,
+                Headers = headers,
+                Topic = _settings.Subscriber.DeadLetterTopic
+            };
+
+            using var producer = _kafkaConnection.GetProducer<string, string>();
+            var kafkaMessage = new Message<string, string>
+            {
+                Key = deadLetterMessage.Key,
+                Value = deadLetterMessage.Value,
+                Headers = []
+            };
+
+            foreach (var header in deadLetterMessage.Headers)
+            {
+                kafkaMessage.Headers.Add(header.Key, header.Value);
+            }
+
+            await producer.ProduceAsync(deadLetterMessage.Topic, kafkaMessage);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to publish message to dead letter queue: {Error}", ex.Message);
+        }
+    }
+
     public void Dispose()
     {
         if (_disposed)
@@ -162,9 +224,11 @@ internal class KafkaSubscriber : ISubscriber, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error disposing Kafka consumer");
+            _logger.LogError(ex, "Error while disposing KafkaSubscriber");
         }
-
-        _disposed = true;
+        finally
+        {
+            _disposed = true;
+        }
     }
 }
