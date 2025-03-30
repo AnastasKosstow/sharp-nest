@@ -24,56 +24,66 @@ internal class KafkaConnection : IDisposable
         _defaultGroupId = groupId ?? _settings.DefaultGroup;
     }
 
-    public IConsumer<TKey, TValue> GetConsumer<TKey, TValue>(string? groupId = null)
+    public async Task<IConsumer<TKey, TValue>> GetConsumerAsync<TKey, TValue>(string? groupId = null, CancellationToken cancellationToken = default)
     {
         ThrowIfDisposed();
 
         var effectiveGroupId = groupId ?? _defaultGroupId;
+        var key = (typeof(TKey), typeof(TValue), effectiveGroupId);
 
-        return (IConsumer<TKey, TValue>)_consumers.GetOrAdd(
-            (typeof(TKey), typeof(TValue), effectiveGroupId),
-            key =>
+        if (_consumers.TryGetValue(key, out var existingConsumer))
+        {
+            return (IConsumer<TKey, TValue>)existingConsumer;
+        }
+
+        await _consumerLock.WaitAsync(cancellationToken);
+        try
+        {
+            if (_consumers.TryGetValue(key, out existingConsumer))
             {
-                _consumerLock.Wait();
-                try
-                {
-                    return new ConsumerBuilder<TKey, TValue>(_configBuilder.BuildConsumerConfig(effectiveGroupId))
-                        .Build();
-                }
-                finally
-                {
-                    _consumerLock.Release();
-                }
-            });
+                return (IConsumer<TKey, TValue>)existingConsumer;
+            }
+
+            var consumer = new ConsumerBuilder<TKey, TValue>(_configBuilder.BuildConsumerConfig(effectiveGroupId))
+                .Build();
+
+            _consumers[key] = consumer;
+            return consumer;
+        }
+        finally
+        {
+            _consumerLock.Release();
+        }
     }
 
-    public IProducer<TKey, TValue> GetProducer<TKey, TValue>(Action<ProducerBuilder<TKey, TValue>>? configurator = null)
+    public async Task<IProducer<TKey, TValue>> GetProducerAsync<TKey, TValue>(Action<ProducerBuilder<TKey, TValue>>? configurator = null, CancellationToken cancellationToken = default)
     {
         ThrowIfDisposed();
 
-        return (IProducer<TKey, TValue>)_producers.GetOrAdd(
-            (typeof(TKey), typeof(TValue)),
-            keyTuple =>
+        if (_producers.TryGetValue((typeof(TKey), typeof(TValue)), out var existingProducer))
+        {
+            return (IProducer<TKey, TValue>)existingProducer;
+        }
+
+        await _producerLock.WaitAsync(cancellationToken);
+        try
+        {
+            if (_producers.TryGetValue((typeof(TKey), typeof(TValue)), out existingProducer))
             {
-                _producerLock.Wait();
-                try
-                {
-                    if (_producers.TryGetValue(keyTuple, out var existingProducer))
-                    {
-                        return existingProducer;
-                    }
+                return (IProducer<TKey, TValue>)existingProducer;
+            }
 
-                    var builder = new ProducerBuilder<TKey, TValue>(_configBuilder.BuildProducerConfig());
+            var builder = new ProducerBuilder<TKey, TValue>(_configBuilder.BuildProducerConfig());
+            configurator?.Invoke(builder);
+            var producer = builder.Build();
 
-                    configurator?.Invoke(builder);
-
-                    return builder.Build();
-                }
-                finally
-                {
-                    _producerLock.Release();
-                }
-            });
+            _producers[(typeof(TKey), typeof(TValue))] = producer;
+            return producer;
+        }
+        finally
+        {
+            _producerLock.Release();
+        }
     }
 
     public void Dispose()

@@ -53,7 +53,7 @@ internal class KafkaSubscriber : ISubscriber, IDisposable
         await EnsureTopicsExistAsync(topics);
         try
         {
-            _kafkaConsumer = _kafkaConnection.GetConsumer<string, string>(groupId);
+            _kafkaConsumer = await _kafkaConnection.GetConsumerAsync<string, string>(groupId);
             _kafkaConsumer.Subscribe(topics);
 
             while (!cancellationToken.IsCancellationRequested)
@@ -190,7 +190,7 @@ internal class KafkaSubscriber : ISubscriber, IDisposable
                 Topic = _settings.Subscriber.DeadLetterTopic
             };
 
-            using var producer = _kafkaConnection.GetProducer<string, string>();
+            using var producer = await _kafkaConnection.GetProducerAsync<string, string>();
             var kafkaMessage = new Message<string, string>
             {
                 Key = deadLetterMessage.Key,

@@ -72,7 +72,7 @@ internal class KafkaPublisher : IPublisher, IDisposable
             var topic = batch.Key;
             ArgumentException.ThrowIfNullOrEmpty(topic, nameof(topic));
 
-            var producer = _connection.GetProducer<string, string>();
+            var producer = await _connection.GetProducerAsync<string, string>();
             var kafkaMessages = PrepareKafkaMessages(batch);
 
             try
@@ -150,7 +150,7 @@ internal class KafkaPublisher : IPublisher, IDisposable
 
         try
         {
-            var producer = _connection.GetProducer<string, string>();
+            var producer = await _connection.GetProducerAsync<string, string>();
 
             DeliveryResult<string, string> result = null;
             await ExecuteWithRetryAsync(async () =>
