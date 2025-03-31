@@ -49,7 +49,7 @@ services.AddSingletonService<IWeatherService>(
     });
 ```
 
-> [!TIP]
+> [!Important]
 > #### Documentation: [here](https://github.com/AnastasKosstow/sharp-nest/blob/main/docs/fluent-decorator.md) <br>
 > #### Sample app: [here](https://github.com/AnastasKosstow/sharp-nest/tree/main/samples/decorator/src/SharpNest.Samples.Decorator)
 
@@ -93,7 +93,7 @@ if (!Success)
 }
 ```
 
-> [!TIP]
+> [!Important]
 > #### Documentation: [here](https://github.com/AnastasKosstow/sharp-nest/blob/main/docs/redis.md) <br>
 > #### Sample app: [here](https://github.com/AnastasKosstow/sharp-nest/tree/main/samples/redis/src/SharpNest.Samples.Redis.Api)
 
@@ -176,7 +176,7 @@ public class MessageConsumerService(ISubscriber subscriber, ILogger<MessageConsu
 }
 ```
 
-> [!TIP]
+> [!Important]
 > #### Documentation: [here](https://github.com/AnastasKosstow/sharp-nest/blob/main/docs/kafka.md) <br>
 > #### Sample app: [here](https://github.com/AnastasKosstow/sharp-nest/tree/main/samples/kafka/src/SharpNest.Samples.Kafka)
 
