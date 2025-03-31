@@ -53,7 +53,7 @@ internal class KafkaSubscriber : ISubscriber, IDisposable
         await EnsureTopicsExistAsync(topics);
         try
         {
-            _kafkaConsumer = await _kafkaConnection.GetConsumerAsync<string, string>(groupId);
+            _kafkaConsumer = await _kafkaConnection.GetConsumerAsync<string, string>(groupId, cancellationToken);
             _kafkaConsumer.Subscribe(topics);
 
             while (!cancellationToken.IsCancellationRequested)
@@ -114,7 +114,7 @@ internal class KafkaSubscriber : ISubscriber, IDisposable
                             case ErrorHandlingStrategy.Retry:
                                 break;
                             case ErrorHandlingStrategy.DeadLetter:
-                                await PublishToDeadLetterQueueAsync(message, ex);
+                                await PublishToDeadLetterQueueAsync(message, ex, cancellationToken);
                                 _kafkaConsumer.Commit(result);
                                 break;
                             case ErrorHandlingStrategy.Throw:
@@ -164,7 +164,7 @@ internal class KafkaSubscriber : ISubscriber, IDisposable
         }
     }
 
-    private async Task PublishToDeadLetterQueueAsync(KafkaMessage message, Exception exception)
+    private async Task PublishToDeadLetterQueueAsync(KafkaMessage message, Exception exception, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(_settings.Subscriber.DeadLetterTopic))
         {
@@ -190,7 +190,7 @@ internal class KafkaSubscriber : ISubscriber, IDisposable
                 Topic = _settings.Subscriber.DeadLetterTopic
             };
 
-            using var producer = await _kafkaConnection.GetProducerAsync<string, string>();
+            using var producer = await _kafkaConnection.GetProducerAsync<string, string>(cancellationToken: cancellationToken);
             var kafkaMessage = new Message<string, string>
             {
                 Key = deadLetterMessage.Key,
