@@ -11,27 +11,3 @@ public static class ServiceCollectionExtensions
         return new ServerSendEventBuilder(services);
     }
 }
-
-
-
-public class Build
-{
-    IServiceCollection services;
-
-    public void BuildSSE()
-    {
-        services.AddServerSendEvent()
-            .ConfigureServerSendEvent(x =>
-            {
-                x.WriteTimeout = TimeSpan.FromDays(1);
-                x.ChannelCapacity = 100;
-            })
-            .WithMessageType<AlertInfo>()
-            .WithSource();
-    }
-}
-
-//public class AlertInfo
-//{
-
-//}
