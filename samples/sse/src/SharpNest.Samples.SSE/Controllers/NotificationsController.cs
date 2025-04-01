@@ -7,9 +7,9 @@ namespace SharpNest.Samples.SSE.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class NotificationsController(ISSEMessageHubService messageHub) : ControllerBase
+    public class NotificationsController(ISSEMessageHubService hub) : ControllerBase
     {
-        private readonly ISSEMessageHubService _hub = messageHub;
+        private readonly ISSEMessageHubService _hub = hub;
 
         [HttpGet("stream")]
         public async Task Stream(CancellationToken cancellationToken)
