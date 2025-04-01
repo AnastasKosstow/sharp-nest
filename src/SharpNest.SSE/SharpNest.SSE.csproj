@@ -3,6 +3,24 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Title>SharpNest.SSE</Title>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<Version>1.0.0</Version>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+	
+  <ItemGroup>
+    <EmbeddedResource Include="README.md">
+      <Pack>true</Pack>
+      <PackagePath></PackagePath>
+    </EmbeddedResource>
+  </ItemGroup>
+	
+  <PropertyGroup>
+	<NoWarn>$(NoWarn);1591</NoWarn>
+    <NoWarn>$(NoWarn);8632</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
