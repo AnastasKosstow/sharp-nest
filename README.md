@@ -12,6 +12,8 @@ This repository contains implementations of various tools or design patterns tha
 * [Fluent Decorator](#fluent-decorator)
 * [Redis](#redis)
 * [Kafka](#kafka)
+* [Server-Sent Events](#server-sent-events)
+
 
 ### Installation
 

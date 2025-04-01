@@ -8,30 +8,38 @@ using System.Threading.Channels;
 
 namespace SharpNest.SSE.Core;
 
-public class SSEMessageHubService<TPayload>(ILogger<SSEMessageHubService<TPayload>> logger, IOptions<SSEOptions> options) : ISSEMessageHubService<TPayload>
+public class SSEMessageHubService(ILogger<SSEMessageHubService> logger, IOptions<SSEOptions> options) : ISSEMessageHubService
 {
-    private readonly ConcurrentDictionary<Guid, Channel<IMessage<TPayload>>> _subscribers = new();
-    private readonly ILogger<SSEMessageHubService<TPayload>> _logger = logger;
+    private readonly ILogger<SSEMessageHubService> _logger = logger;
     private readonly SSEOptions _options = options.Value;
 
-    public async IAsyncEnumerable<IMessage<TPayload>> SubscribeAsync([EnumeratorCancellation] CancellationToken cancellationToken)
+    private readonly ConcurrentDictionary<Guid, SubscriberInfo> _subscribers = new();
+
+    public async IAsyncEnumerable<IMessage> SubscribeAsync([EnumeratorCancellation] CancellationToken cancellationToken)
     {
         var id = Guid.NewGuid();
-        var channel = Channel.CreateBounded<IMessage<TPayload>>(new BoundedChannelOptions(_options.ChannelCapacity)
+        var channel = Channel.CreateBounded<IMessage>(new BoundedChannelOptions(_options.ChannelCapacity)
         {
             SingleWriter = false,
             SingleReader = true,
             FullMode = BoundedChannelFullMode.Wait
         });
 
-        _subscribers.TryAdd(id, channel);
+        var subscriberInfo = new SubscriberInfo
+        {
+            Channel = channel,
+            LastMessageTime = DateTime.UtcNow,
+            FailedDeliveries = 0
+        };
+
+        _subscribers.TryAdd(id, subscriberInfo);
 
         try
         {
             cancellationToken.Register(() =>
             {
-                _subscribers.TryRemove(id, out var removedChannel);
-                removedChannel?.Writer.TryComplete();
+                _subscribers.TryRemove(id, out var removed);
+                removed?.Channel.Writer.TryComplete();
             });
 
             await foreach (var message in channel.Reader.ReadAllAsync(cancellationToken))
@@ -42,11 +50,11 @@ public class SSEMessageHubService<TPayload>(ILogger<SSEMessageHubService<TPayloa
         finally
         {
             _subscribers.TryRemove(id, out var removedChannel);
-            removedChannel?.Writer.TryComplete();
+            removedChannel?.Channel.Writer.TryComplete();
         }
     }
 
-    public async Task BroadcastMessageAsync(IMessage<TPayload> message)
+    public async Task BroadcastMessageAsync(IMessage message)
     {
         if (_subscribers.IsEmpty)
         {
@@ -55,14 +63,23 @@ public class SSEMessageHubService<TPayload>(ILogger<SSEMessageHubService<TPayloa
 
         var tasks = _subscribers.Select(async kvp =>
         {
-            var (id, channel) = kvp;
+            var (id, info) = kvp;
+
             try
             {
-                var writeTask = channel.Writer.WriteAsync(message).AsTask();
-                if (await Task.WhenAny(writeTask, Task.Delay(_options.WriteTimeout)) != writeTask)
+                switch (_options.SlowConsumerStrategy)
                 {
-                    _logger.LogWarning("Timeout writing to subscriber {Id}. Message: Id={MessageId}",
-                        id, message.Id);
+                    case SlowConsumerStrategy.Wait:
+                        await HandleWaitStrategyAsync(info, message);
+                        break;
+
+                    case SlowConsumerStrategy.DropMessages:
+                        await HandleDropMessagesStrategyAsync(info, message);
+                        break;
+
+                    case SlowConsumerStrategy.DisconnectSubscriber:
+                        await HandleDisconnectSubscriberStrategyAsync(id, info, message);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -73,5 +90,54 @@ public class SSEMessageHubService<TPayload>(ILogger<SSEMessageHubService<TPayloa
         });
 
         await Task.WhenAll(tasks);
+    }
+
+    private async Task HandleWaitStrategyAsync(SubscriberInfo subscriberInfo, IMessage message)
+    {
+        await subscriberInfo.Channel.Writer.WriteAsync(message);
+        subscriberInfo.FailedDeliveries = 0;
+    }
+
+    private async Task HandleDropMessagesStrategyAsync(SubscriberInfo subscriberInfo, IMessage message)
+    {
+        var writeTask = subscriberInfo.Channel.Writer.WriteAsync(message).AsTask();
+
+        if (await Task.WhenAny(writeTask, Task.Delay(_options.WriteTimeout)) != writeTask)
+        {
+            subscriberInfo.FailedDeliveries++;
+        }
+        else
+        {
+            subscriberInfo.FailedDeliveries = 0;
+        }
+    }
+
+    private async Task HandleDisconnectSubscriberStrategyAsync(Guid subscriberId, SubscriberInfo subscriberInfo, IMessage message)
+    {
+        var writeTask = subscriberInfo.Channel.Writer.WriteAsync(message).AsTask();
+
+        if (await Task.WhenAny(writeTask, Task.Delay(_options.WriteTimeout)) != writeTask)
+        {
+            subscriberInfo.FailedDeliveries++;
+
+            if (subscriberInfo.FailedDeliveries >= 3)
+            {
+                if (_subscribers.TryRemove(subscriberId, out var removedInfo))
+                {
+                    removedInfo.Channel.Writer.TryComplete();
+                }
+            }
+        }
+        else
+        {
+            subscriberInfo.FailedDeliveries = 0;
+        }
+    }
+
+    private class SubscriberInfo
+    {
+        public Channel<IMessage> Channel { get; set; }
+        public DateTime LastMessageTime { get; set; }
+        public int FailedDeliveries { get; set; }
     }
 }

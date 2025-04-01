@@ -37,7 +37,6 @@ app.MapPost("/publish", async (Request request, IPublisher publisher) =>
 app.Run();
 
 
-
 public class Request
 {
     public string Key { get; set; }

@@ -4,12 +4,12 @@ using SharpNest.SSE.Core.Abstractions;
 
 namespace SharpNest.SSE.Core;
 
-public class SSEMessageBackgroundService<TPayload>(IMessageSource<TPayload> messageSource, ISSEMessageHubService<TPayload> messageHub, ILogger<SSEMessageBackgroundService<TPayload>> logger) 
+public class SSEMessageBackgroundService(IMessageSource messageSource, ISSEMessageHubService messageHub, ILogger<SSEMessageBackgroundService> logger) 
     : IHostedService, IDisposable
 {
-    private readonly IMessageSource<TPayload> _messageSource = messageSource;
-    private readonly ISSEMessageHubService<TPayload> _messageHub = messageHub;
-    private readonly ILogger<SSEMessageBackgroundService<TPayload>> _logger = logger;
+    private readonly IMessageSource _messageSource = messageSource;
+    private readonly ISSEMessageHubService _messageHub = messageHub;
+    private readonly ILogger<SSEMessageBackgroundService> _logger = logger;
 
     private Task _executingTask;
     private CancellationTokenSource _cancellationTokenSource;
@@ -61,7 +61,7 @@ public class SSEMessageBackgroundService<TPayload>(IMessageSource<TPayload> mess
         }
     }
 
-    private async Task HandleMessageAsync(IMessage<TPayload> message)
+    private async Task HandleMessageAsync(IMessage message)
     {
         try
         {
