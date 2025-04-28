@@ -10,9 +10,10 @@
 This repository contains implementations of various tools or design patterns that simplify integration of .net projects with these technologies.
 
 * [Fluent Decorator](#fluent-decorator)
+* [Server-Sent Event](#server-sent-event)
 * [Redis](#redis)
 * [Kafka](#kafka)
-* [Server-Sent Event](#server-sent-event)
+* [Cache](#cache)
 
 
 ### Installation
