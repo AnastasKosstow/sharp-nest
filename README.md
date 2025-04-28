@@ -59,6 +59,48 @@ services.AddSingletonService<IWeatherService>(
 
 ---
 
+## Server-Sent Event
+
+SharpNest.SSE is a lightweight and powerful library that simplifies the integration of Server-Sent Events (SSE) into .NET applications.
+<br>
+It provides a fluent API for configuring and managing SSE connections, with built-in support for different message sources and consumer handling strategies.
+<br>
+With SharpNest.SSE, you can easily implement real-time, one-way communication from server to client without the complexity of WebSockets or the overhead of polling.
+<br>
+It supports configurable channel capacity, timeout handling, and various strategies for managing slow consumers, ensuring robust real-time communication in your applications.
+
+#### 🔍 What are Server-Sent Events?
+
+Server-Sent Events (SSE) is a standard that enables servers to push real-time updates to clients over a single HTTP connection. Unlike WebSockets, SSE:
+
+- Provides one-way communication (server to client only)
+- Uses standard HTTP, making it firewall-friendly
+- Automatically reconnects if the connection is dropped
+- Is simpler to implement than WebSockets
+- Works natively in most modern browsers
+
+SSE is ideal for scenarios like notifications, live feeds, status updates, and any application where clients need to receive real-time updates from the server.
+
+```cs
+// Program.cs
+using SharpNest.SSE;
+
+builder.Services.AddServerSentEvent()
+    .Configure(options =>
+    {
+        options.ChannelCapacity = 500;
+        options.WriteTimeout = TimeSpan.FromSeconds(2);
+        options.SlowConsumerStrategy = SlowConsumerStrategy.DropMessages;
+    })
+    .WithSource<YourCustomMessageSource>();
+```
+
+> [!Important]
+> #### Documentation: [here](https://github.com/AnastasKosstow/sharp-nest/blob/main/docs/server-sent-event.md) <br>
+> #### Sample app: [here](https://github.com/AnastasKosstow/sharp-nest/tree/main/samples/sse/src/SharpNest.Samples.SSE)
+
+---
+
 ## Redis
 
 Powerful Redis client for .NET applications that provides a clean, strongly-typed API for Redis operations.
@@ -185,45 +227,6 @@ public class MessageConsumerService(ISubscriber subscriber, ILogger<MessageConsu
 > #### Sample app: [here](https://github.com/AnastasKosstow/sharp-nest/tree/main/samples/kafka/src/SharpNest.Samples.Kafka)
 
 
-## Server-Sent Event
-
-SharpNest.SSE is a lightweight and powerful library that simplifies the integration of Server-Sent Events (SSE) into .NET applications.
-<br>
-It provides a fluent API for configuring and managing SSE connections, with built-in support for different message sources and consumer handling strategies.
-<br>
-With SharpNest.SSE, you can easily implement real-time, one-way communication from server to client without the complexity of WebSockets or the overhead of polling.
-<br>
-It supports configurable channel capacity, timeout handling, and various strategies for managing slow consumers, ensuring robust real-time communication in your applications.
-
-#### 🔍 What are Server-Sent Events?
-
-Server-Sent Events (SSE) is a standard that enables servers to push real-time updates to clients over a single HTTP connection. Unlike WebSockets, SSE:
-
-- Provides one-way communication (server to client only)
-- Uses standard HTTP, making it firewall-friendly
-- Automatically reconnects if the connection is dropped
-- Is simpler to implement than WebSockets
-- Works natively in most modern browsers
-
-SSE is ideal for scenarios like notifications, live feeds, status updates, and any application where clients need to receive real-time updates from the server.
-
-```cs
-// Program.cs
-using SharpNest.SSE;
-
-builder.Services.AddServerSentEvent()
-    .Configure(options =>
-    {
-        options.ChannelCapacity = 500;
-        options.WriteTimeout = TimeSpan.FromSeconds(2);
-        options.SlowConsumerStrategy = SlowConsumerStrategy.DropMessages;
-    })
-    .WithSource<YourCustomMessageSource>();
-```
-
-> [!Important]
-> #### Documentation: [here](https://github.com/AnastasKosstow/sharp-nest/blob/main/docs/server-sent-event.md) <br>
-> #### Sample app: [here](https://github.com/AnastasKosstow/sharp-nest/tree/main/samples/sse/src/SharpNest.Samples.SSE)
 
 
 
